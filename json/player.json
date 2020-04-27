@@ -1,0 +1,96 @@
+{
+    "id": 1,
+    "type": "great-sword",
+    "rarity": 1,
+    "attack": {
+        "display": 384,
+        "raw": 80
+    },
+    "elderseal": null,
+    "attributes": {},
+    "damageType": "sever",
+    "name": "Buster Sword 1",
+    "durability": [
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 50,
+            "green": 0,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        },
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 60,
+            "green": 0,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        },
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 70,
+            "green": 0,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        },
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 80,
+            "green": 0,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        },
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 80,
+            "green": 10,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        },
+        {
+            "red": 100,
+            "orange": 50,
+            "yellow": 80,
+            "green": 20,
+            "blue": 0,
+            "white": 0,
+            "purple": 0
+        }
+    ],
+    "slots": [],
+    "elements": [],
+    "crafting": {
+        "craftable": true,
+        "previous": null,
+        "branches": [
+            2
+        ],
+        "craftingMaterials": [
+            {
+                "quantity": 1,
+                "item": {
+                    "id": 116,
+                    "rarity": 4,
+                    "carryLimit": 99,
+                    "value": 60,
+                    "name": "Iron Ore",
+                    "description": "Ore that can be smelted into metal and used for many different purposes."
+                }
+            }
+        ],
+        "upgradeMaterials": []
+    },
+    "assets": {
+        "icon": "https:\/\/assets.mhw-db.com\/weapons\/great-sword\/icons\/83b9e1fa727ca6ba922b53a42626a167.26ad6221e21811da5278502fabfc138b33d622bc.png",
+        "image": "https:\/\/assets.mhw-db.com\/weapons\/great-sword\/83f7ab6e7e5669ec416d772049b8b054e2624c2e.c7bad811e203c9bb55626e414659a4f7.png"
+    }
+}

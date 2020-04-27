@@ -1,0 +1,5 @@
+version control on runtime make call to the server and check against local logs
+saving of user data
+graphical interface
+
+dont' forget cost!
