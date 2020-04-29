@@ -2,37 +2,46 @@ import requests
 from bs4 import BeautifulSoup
 # https://mhworld.kiranico.com/weapons/kkFocOG/magda-ungulae-ii
 
-page = requests.get("https://mhworld.kiranico.com/weapons/WJHESxX/dragonbone-cleaver-iii")
+page = requests.get("https://mhworld.kiranico.com/weapons/O5uZiXz/iron-eschaton-i")
 soup = BeautifulSoup(page.content, 'html.parser')
 # f = open("content.txt", "a")
 # f.write(soup.prettify())
 # f.close()
-
-colsm6 = soup.find_all(class_='col-sm-6')[0].text.strip().split('-')
-td = soup.find_all(class_='col-sm-6')[1]
-tr = td.find_all('td')
-atkV = tr[1].text.split(' | ')
-slots = tr[3].find_all('img')
-affinity = tr[4].text.split()[0].rstrip('%')
-# tr[6] = sharpness
-print(tr[8])
-
-
 obj = {}
+
+details = soup.find_all(class_='col-sm-6')[0].text.strip().split('-')
+
+statTable = soup.find_all(class_='col-sm-6')[1]
+statTableRow = statTable.find_all('td')
+atkValues = statTableRow[1].text.split(' | ')
+slots = statTableRow[3].find_all('img')
+affinity = statTableRow[4].text.split()[0].rstrip('%')
+# statTableRow[6] = sharpness
+weaponTreeTable = soup.find_all(class_='col-lg-6')[0]
+craftingTable = soup.find_all(class_='col-lg-6')[1].find(class_='table table-sm')
+craftingTableRow = craftingTable.find_all("tr")
+for item in range(0,len(craftingTableRow)):
+    craftingTableRow[item] = craftingTableRow[item].text.strip().split('\n')
+    for line in range(0,len(craftingTableRow[item])):
+        craftingTableRow[item][line] = craftingTableRow[item][line].strip()
+print(craftingTableRow)
+print('')
+
+
 obj["id"] = 0
-obj["type"] = colsm6[0].strip()
-obj["rarity"] = tr[0].text[7]
+obj["type"] = details[0].strip()
+obj["rarity"] = statTableRow[0].text[7]
 obj["attack"] = {
-    "display": atkV[0],
-    "raw": atkV[1].split('\n')[0]
+    "display": atkValues[0],
+    "raw": atkValues[1].split('\n')[0]
     }
 obj["affinity"] = int(affinity)
-obj["defense"] = int(tr[5].text.split()[0][1:-1])
-obj["elderseal"] = str(tr[7].find_all('strong')[0])[8:-9]
+obj["defense"] = int(statTableRow[5].text.split()[0][1:-1])
+obj["elderseal"] = str(statTableRow[7].find_all('strong')[0])[8:-9]
 obj["attributes"] = {}
 obj["damageType"] = None
 obj["name"] = soup.find_all(class_='align-self-center')[0].text
-obj["description"] = colsm6[2].strip()
+obj["description"] = details[2].strip()
 obj["durability"] = [
         {
             "red": 0,
@@ -97,6 +106,7 @@ obj["crafting"] = {
     "branches": [
             2
         ],
+    # "cost" : int(craftingTableRow[0].split('\n')[1].rstrip('z').replace(',','')),
     "craftingMaterials": [
         {
             "quantity": 1,
@@ -119,7 +129,7 @@ obj["assets"] = {
 
 
 
-elements = tr[2].text.split()
+elements = statTableRow[2].text.split()
 elements.pop()
 for x in range(0,len(elements),2):
     obj['elements'].append({elements[x] : elements[x+1]})
@@ -127,3 +137,6 @@ for x in range(0,len(elements),2):
 for slot in slots:
     x = slot['src'][-5]
     obj['slots'].append({'rank' : int(x)})
+
+
+# print(obj['crafting'])
