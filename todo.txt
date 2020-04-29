@@ -1,5 +1,36 @@
+Scrape:
+    id
+    attributes
+    damage type
+    durability
+    crafting
+        craftable
+        previous
+        branches
+        craftingMaterials
+        upgradeMaterials
+    assets
+        image
+    ammo
+    coatings
+    attack variables
+
+done:
+    type
+    rarity
+    attack
+        display
+        raw
+    affinity
+    defence
+    elderseal
+    assets
+        thumb
+
 version control on runtime make call to the server and check against local logs
 saving of user data
 graphical interface
 
 dont' forget cost!
+
+content-box p-4
