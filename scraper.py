@@ -2,18 +2,18 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://mhworld.kiranico.com/weapons/WJHDcxv/magda-potestas-ii"
+url = "https://mhworld.kiranico.com/weapons/0PUyUY5/carapace-axe-iii"
 
 
-#pull from page
+# pull from page
 page = requests.get(url)
 soup = BeautifulSoup(page.content, 'html.parser')
 
 # base object initialization
 obj = {}
-    
-#sort elements from:
-#details
+
+# sort elements from:
+# details
 details = soup.find_all(class_='col-sm-6')[0].text.strip().split('-')
 obj["name"] = soup.find_all(class_='align-self-center')[0].text
 obj["description"] = details[2].strip()
@@ -23,22 +23,22 @@ obj["assets"] = {
     "image": soup.find_all(class_='img-fluid')[0]['src']
 }
 
-#Stats table
+# Stats table
 statTable = soup.find_all(class_='col-sm-6')[1]
 statTableRows = statTable.find_all('tr')
 col1 = statTableRows[0].find_all('td')
 col2 = statTableRows[1].find_all('td')
 col3 = statTableRows[2].find_all('td')
 
-#1:1
+# 1:1
 obj["rarity"] = col1[0].text[7]
-#1:2
+# 1:2
 atkValues = col1[1].text.split(' | ')
 obj["attack"] = {
     "display": atkValues[0],
     "raw": atkValues[1].split('\n')[0]
 }
-#1:3
+# 1:3
 if obj["type"] == "Light Bowgun":
     obj["deviation"] = col1[2].find_all('div')[0].text.strip()
 elif obj["type"] == "Heavy Bowgun":
@@ -58,22 +58,18 @@ else:
             'type': elements[x],
             'damage': int(elements[x+1]),
             'hidden': hidden})
-#2:1
+# 2:1
 obj['slots'] = []
 slots = col2[0].find_all('img')
 for slot in slots:
     x = slot['src'][-5]
     obj['slots'].append({'rank': int(x)})
-#2:2
+# 2:2
 obj['affinity'] = col2[1].text.split()[0].rstrip('%')
-#2:3
+# 2:3
 obj['defence'] = int(col2[2].text.split()[0][1:-1])
-#3:1
-if obj["type"] == "Light Bowgun":
-    None
-elif obj["type"] == "Heavy Bowgun":
-    None
-else:
+# 3:1
+if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
     red = col3[0].find_all(class_='sharpness-red')
     orange = col3[0].find_all(class_='sharpness-orange')
     yellow = col3[0].find_all(class_='sharpness-yellow')
@@ -82,25 +78,83 @@ else:
     white = col3[0].find_all(class_='sharpness-white')
     purple = col3[0].find_all(class_='sharpness-purple')
     obj["durability"] = [
-    {
-        "red": int(float(red[0]['style'][7:-2])*4),
-        "orange": int(float(orange[0]['style'][7:-2])*4),
-        "yellow": int(float(yellow[0]['style'][7:-2])*4),
-        "green": int(float(green[0]['style'][7:-2])*4),
-        "blue": int(float(blue[0]['style'][7:-2])*4),
-        "white": int(float(white[0]['style'][7:-2])*4),
-        "purple": int(float(purple[0]['style'][7:-2])*4),
-    },
-    {
-        "red": int(float(red[1]['style'][7:-2])*4),
-        "orange": int(float(orange[0]['style'][7:-2])*4),
-        "yellow": int(float(yellow[0]['style'][7:-2])*4),
-        "green": int(float(green[0]['style'][7:-2])*4),
-        "blue": int(float(blue[0]['style'][7:-2])*4),
-        "white": int(float(white[0]['style'][7:-2])*4),
-        "purple": int(float(purple[0]['style'][7:-2])*4),
-    }]
-# LeftTables = soup.find_all(class_='col-lg-6')[0]
+        {
+            "red": int(float(red[0]['style'][7:-2])*4),
+            "orange": int(float(orange[0]['style'][7:-2])*4),
+            "yellow": int(float(yellow[0]['style'][7:-2])*4),
+            "green": int(float(green[0]['style'][7:-2])*4),
+            "blue": int(float(blue[0]['style'][7:-2])*4),
+            "white": int(float(white[0]['style'][7:-2])*4),
+            "purple": int(float(purple[0]['style'][7:-2])*4),
+        },
+        {
+            "red": int(float(red[1]['style'][7:-2])*4),
+            "orange": int(float(orange[0]['style'][7:-2])*4),
+            "yellow": int(float(yellow[0]['style'][7:-2])*4),
+            "green": int(float(green[0]['style'][7:-2])*4),
+            "blue": int(float(blue[0]['style'][7:-2])*4),
+            "white": int(float(white[0]['style'][7:-2])*4),
+            "purple": int(float(purple[0]['style'][7:-2])*4),
+        }]
+# 3:2
+obj['elderseal'] = None if col3[1].find_all('strong')[0].text == "" else col3[1].find_all('strong')[0].text
+# 4 
+if obj["type"] == "Hunting Horn":
+    col4 = statTableRows[3].find('td').find_all('span')
+    notes = {
+        0: 'purple',
+        1: 'red',
+        2: 'orange',
+        3: 'yellow',
+        4: 'green',
+        5: 'blue',
+        6: 'cyan',
+        7: 'white'}
+    obj["notes"] = {
+        'purple': False,
+        'red': False,
+        'orange': False,
+        'yellow': False,
+        'green': False,
+        'blue': False,
+        'cyan': False,
+        'white': False
+    }
+    
+    for note in col4:
+        obj["notes"][notes[int(note['class'][0][-1])]] = True
+if obj["type"] == "Gunlance":
+    col4 = statTableRows[3].text.split()
+    obj["Shelling"] = {
+        "type" : col4[0],
+        "level" : int(col4[2])
+    }
+if obj["type"] == "Switch Axe":
+    col4 = statTableRows[3].text.split()
+    if(col4[0] == "Power"):
+        if col4[1] == "Element":
+            phial = "Power Element"
+            dmg = None
+        else:
+            phial = "Power"
+            dmg = None
+    else:
+        phial = col4[0]
+        dmg = int(col4[2]) * 10
+    obj["phial"] = {
+        "type" : phial,
+        "dmg" : dmg
+    }
+if obj["type"] == "Charge Blade":
+    None
+if obj["type"] == "Insect Glaive":
+    None
+if obj["type"] == "Bow":
+    None
+if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
+    None
+
+#  LeftTables = soup.find_all(class_='col-lg-6')[0]
 # rightTables = soup.find_all(class_='col-lg-6')[1]
 # if len(rightTables) == 2:
 #     requirements = True
@@ -115,80 +169,12 @@ else:
 #         craftingTableRow[item][line] = craftingTableRow[item][line].strip()
 #         if craftingTableRow[item][line] == 'Forge Equipment':
 #             craftable = True
-# elderseal = str(statTableRows[7].find_all('strong')[0])[8:-9]
 
 # obj["id"] = 0
 
 
-# obj["attack"] = {
-#     "display": atkValues[0],
-#     "raw": atkValues[1].split('\n')[0]
-# }
-# obj["affinity"] = int(affinity)
-# obj["defense"] = 
-# obj["elderseal"] = None if elderseal == '' else elderseal
 # obj["attributes"] = {}
 # obj["damageType"] = None
-
-
-# obj["durability"] = [
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     },
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     },
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     },
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     },
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     },
-#     {
-#         "red": 0,
-#         "orange": 0,
-#         "yellow": 0,
-#         "green": 0,
-#         "blue": 0,
-#         "white": 0,
-#         "purple": 0
-#     }
-# ]
-# obj["slots"] = []
-# obj["elements"] = []
 # obj["crafting"] = {
 #     "craftable": craftable,
 #     "previous": None,
@@ -212,7 +198,6 @@ else:
 #     ],
 #     "upgradeMaterials": []
 # }
-
 
 
 # # write to file
