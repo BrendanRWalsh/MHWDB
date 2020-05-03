@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://mhworld.kiranico.com/weapons/0PUyUY5/carapace-axe-iii"
+url = "https://mhworld.kiranico.com/weapons/0WIDi7/chrome-assault-i"
 
 
 # pull from page
@@ -14,7 +14,7 @@ obj = {}
 
 # sort elements from:
 # details
-details = soup.find_all(class_='col-sm-6')[0].text.strip().split('-')
+details = soup.find_all(class_='col-sm-6')[0].text.strip().split(' - ')
 obj["name"] = soup.find_all(class_='align-self-center')[0].text
 obj["description"] = details[2].strip()
 obj["type"] = details[0].strip()
@@ -30,15 +30,15 @@ col1 = statTableRows[0].find_all('td')
 col2 = statTableRows[1].find_all('td')
 col3 = statTableRows[2].find_all('td')
 
-# 1:1
-obj["rarity"] = col1[0].text[7]
-# 1:2
+# 1:1 - Rarity
+obj["rarity"] = int(col1[0].text[7])
+# 1:2 - Attack Values
 atkValues = col1[1].text.split(' | ')
 obj["attack"] = {
     "display": atkValues[0],
     "raw": atkValues[1].split('\n')[0]
 }
-# 1:3
+# 1:3 - Element(s) or bowgun deviation/skill
 if obj["type"] == "Light Bowgun":
     obj["deviation"] = col1[2].find_all('div')[0].text.strip()
 elif obj["type"] == "Heavy Bowgun":
@@ -58,17 +58,17 @@ else:
             'type': elements[x],
             'damage': int(elements[x+1]),
             'hidden': hidden})
-# 2:1
+# 2:1 -  Decoration Slots
 obj['slots'] = []
 slots = col2[0].find_all('img')
 for slot in slots:
     x = slot['src'][-5]
     obj['slots'].append({'rank': int(x)})
-# 2:2
+# 2:2 - Affinity
 obj['affinity'] = col2[1].text.split()[0].rstrip('%')
-# 2:3
-obj['defence'] = int(col2[2].text.split()[0][1:-1])
-# 3:1
+# 2:3 - Defense
+obj['defense'] = int(col2[2].text.split()[0][1:-1])
+# 3:1 - Durability
 if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
     red = col3[0].find_all(class_='sharpness-red')
     orange = col3[0].find_all(class_='sharpness-orange')
@@ -96,9 +96,10 @@ if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
             "white": int(float(white[0]['style'][7:-2])*4),
             "purple": int(float(purple[0]['style'][7:-2])*4),
         }]
-# 3:2
-obj['elderseal'] = None if col3[1].find_all('strong')[0].text == "" else col3[1].find_all('strong')[0].text
-# 4 
+# 3:2 - Elderseal
+obj['elderseal'] = None if col3[1].find_all(
+    'strong')[0].text == "" else col3[1].find_all('strong')[0].text
+# 4 - Unique to weapon type: Notes, Shelling type, Phial, Kinesect bonus, Coatings, ammo initialization + mods
 if obj["type"] == "Hunting Horn":
     col4 = statTableRows[3].find('td').find_all('span')
     notes = {
@@ -120,14 +121,14 @@ if obj["type"] == "Hunting Horn":
         'cyan': False,
         'white': False
     }
-    
+
     for note in col4:
         obj["notes"][notes[int(note['class'][0][-1])]] = True
 if obj["type"] == "Gunlance":
     col4 = statTableRows[3].text.split()
     obj["Shelling"] = {
-        "type" : col4[0],
-        "level" : int(col4[2])
+        "type": col4[0],
+        "level": int(col4[2])
     }
 if obj["type"] == "Switch Axe":
     col4 = statTableRows[3].text.split()
@@ -142,17 +143,771 @@ if obj["type"] == "Switch Axe":
         phial = col4[0]
         dmg = int(col4[2]) * 10
     obj["phial"] = {
-        "type" : phial,
-        "dmg" : dmg
+        "type": phial,
+        "dmg": dmg
     }
 if obj["type"] == "Charge Blade":
-    None
+    col4 = statTableRows[3].text.split()
+    if col4[1] == "Element":
+        phial = "Power Element"
+        dmg = None
+    else:
+        phial = "Impact"
+        dmg = None
+    obj["phial"] = {
+        "type": phial,
+        "dmg": dmg
+    }
 if obj["type"] == "Insect Glaive":
-    None
+    col4 = statTableRows[3].text.split()
+    col4.pop()
+    col4.pop()
+    if(col4[-1] == 'Boost'):
+        col4.pop()
+    obj["boost type"] = " ".join(col4)
 if obj["type"] == "Bow":
-    None
+    col4 = statTableRows[3].find_all(class_="text-muted")
+    coats = []
+    for item in col4:
+        coats.append(item.text.lower())
+    obj["coatings"] = {
+        "close range": False if "close range" in coats else True,
+        "power": False if "power" in coats else True,
+        "paralysis": False if "paralysis" in coats else True,
+        "poison": False if "poison" in coats else True,
+        "sleep": False if "sleep" in coats else True,
+        "blast": False if "blast" in coats else True}
 if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
-    None
+    obj["mods"] = 1 if obj['rarity'] < 3 else 2 if obj['rarity'] < 5 else 3 if obj['rarity'] < 9 else 4 if obj['rarity'] < 10 else 5
+    obj["ammo"] = {
+        "normal": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None,
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            3: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None,
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None,
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "pierce": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            3: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "spread": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            3: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "sticky": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            3: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "cluster": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            3: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "recover": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "poison": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "paralysis": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "sleep": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "exhaust": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            },
+            2: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "flaming": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "water": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "freeze": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "thunder": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "dragon": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "slicing": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "wyvern": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "demon": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "power": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "armor": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        },
+        "tranq": {
+            1: {
+                "count": 0,
+                "recoil": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "reload": {
+                    1: None,
+                    2: None,
+                    3: None,
+                    4: None,
+                    5: None, 
+                },
+                "rapid fire": False,
+                "autoreload": False
+            }
+        }
+    }
+
+
+
+# Ammo Up: Capacity <= 4: capacity +1,>= 5: capacity + 2
 
 #  LeftTables = soup.find_all(class_='col-lg-6')[0]
 # rightTables = soup.find_all(class_='col-lg-6')[1]
