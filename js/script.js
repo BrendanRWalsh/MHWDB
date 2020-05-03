@@ -55,10 +55,10 @@ function findByName(weaponName){
         if(roman.includes(weaponValue)){
             x = roman.indexOf(weaponValue) + 1
             weaponName = weaponName.substring(0,weaponName.length - weaponValue.length).concat(x.toString())
-            console.log(weaponName)
         }
     }
-    for(weapon in weapons){if (weapons[weapon].name == weaponName){console.log(weapons[weapon])}}
+    for(weapon in weapons){if (weapons[weapon].name == weaponName){
+        return weapons[weapon]}}
 }
 function findByType(weaponType){
     list = []

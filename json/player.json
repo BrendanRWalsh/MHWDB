@@ -94,3 +94,114 @@
         "image": "https:\/\/assets.mhw-db.com\/weapons\/great-sword\/83f7ab6e7e5669ec416d772049b8b054e2624c2e.c7bad811e203c9bb55626e414659a4f7.png"
     }
 }
+
+{
+    "id": 0,
+    "type": "Dual Blades",
+    "rarity": "7",
+    "attack": {
+        "display": "308",
+        "raw": "220"
+    },
+    "affinity": -20,
+    "defense": 20,
+    "elderseal": "",
+    "attributes": {},
+    "damageType": None,
+    "name": "Magda Ungulae II",
+    "description": "Pulsing with godly heat, these Zorah Magdaros dual blades' tips are imposing as mountaintops.", 
+    "durability": [
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    },
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    },
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    },
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    },
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    },
+    {
+        "red": 0,
+        "orange": 0,
+        "yellow": 0,
+        "green": 0,
+        "blue": 0,
+        "white": 0,
+        "purple": 0
+    }
+],
+"slots": [
+    {
+        "rank": 2
+    }
+],
+"elements": [
+    {
+        "type": "Blast",
+        "damage": 210,
+        "hidden": False
+    }
+],
+"crafting": {
+    "craftable": False,
+    "previous": None,
+    "branches": [
+        2
+    ],
+    "final": 0,
+    "craftingMaterials": [
+        {
+            "quantity": 1,
+            "item": {
+                "id": 116,
+                "rarity": 4,
+                "carryLimit": 99,
+                "value": 60,
+                "name": "Iron Ore",
+                "description": "Ore that can be smelted into metal and used for many different purposes."
+            }
+        }
+    ],
+    "upgradeMaterials": []
+},
+"assets": {
+    "icon": "https: //mhworld.kiranico.com/storage/mhw/thumb/wp_kkFocOG_thumb.png",
+    "image": "https:\\/\\/assets.mhw-db.com\\/weapons\\/great-sword\\/83f7ab6e7e5669ec416d772049b8b054e2624c2e.c7bad811e203c9bb55626e414659a4f7.png"
+}
+}

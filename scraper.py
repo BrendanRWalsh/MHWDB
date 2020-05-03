@@ -32,12 +32,14 @@ col3 = statTableRows[2].find_all('td')
 
 # 1:1 - Rarity
 obj["rarity"] = int(col1[0].text[7])
+
 # 1:2 - Attack Values
 atkValues = col1[1].text.split(' | ')
 obj["attack"] = {
     "display": atkValues[0],
     "raw": atkValues[1].split('\n')[0]
 }
+
 # 1:3 - Element(s) or bowgun deviation/skill
 if obj["type"] == "Light Bowgun":
     obj["deviation"] = col1[2].find_all('div')[0].text.strip()
@@ -58,16 +60,20 @@ else:
             'type': elements[x],
             'damage': int(elements[x+1]),
             'hidden': hidden})
+
 # 2:1 -  Decoration Slots
 obj['slots'] = []
 slots = col2[0].find_all('img')
 for slot in slots:
     x = slot['src'][-5]
     obj['slots'].append({'rank': int(x)})
+
 # 2:2 - Affinity
 obj['affinity'] = col2[1].text.split()[0].rstrip('%')
+
 # 2:3 - Defense
 obj['defense'] = int(col2[2].text.split()[0][1:-1])
+
 # 3:1 - Durability
 if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
     red = col3[0].find_all(class_='sharpness-red')
@@ -96,10 +102,12 @@ if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
             "white": int(float(white[0]['style'][7:-2])*4),
             "purple": int(float(purple[0]['style'][7:-2])*4),
         }]
+
 # 3:2 - Elderseal
 obj['elderseal'] = None if col3[1].find_all(
     'strong')[0].text == "" else col3[1].find_all('strong')[0].text
-# 4 - Unique to weapon type: Notes, Shelling type, Phial, Kinesect bonus, Coatings, ammo initialization + mods
+
+# 4 - Unique to weapon type: HH notes, Shelling type, Phial, Kinesect bonus, Coatings, Ammo + mods
 if obj["type"] == "Hunting Horn":
     col4 = statTableRows[3].find('td').find_all('span')
     notes = {
@@ -182,7 +190,7 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
     obj["ammo"] = {
         "normal": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -196,10 +204,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     4: None,
                     5: None, },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -214,10 +222,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None,
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             3: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -233,12 +241,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None,
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "pierce": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -254,10 +262,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -273,10 +281,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             3: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -292,12 +300,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "spread": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -313,10 +321,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -332,10 +340,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             3: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -351,12 +359,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "sticky": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -372,10 +380,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -391,10 +399,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             3: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -410,12 +418,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "cluster": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -431,10 +439,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -450,10 +458,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             3: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -469,12 +477,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "recover": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -490,10 +498,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -509,12 +517,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "poison": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -530,10 +538,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -549,12 +557,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "paralysis": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -570,10 +578,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -589,12 +597,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "sleep": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -610,10 +618,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -629,12 +637,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "exhaust": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -650,10 +658,10 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             },
             2: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -669,12 +677,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "flaming": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -690,12 +698,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "water": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -711,12 +719,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "freeze": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -732,12 +740,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "thunder": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -753,12 +761,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "dragon": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -774,12 +782,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "slicing": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -795,12 +803,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "wyvern": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -816,12 +824,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "demon": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -837,12 +845,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "power": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -858,12 +866,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "armor": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -879,12 +887,12 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         },
         "tranq": {
             1: {
-                "count": 0,
+                "capacity": 0,
                 "recoil": {
                     1: None,
                     2: None,
@@ -900,12 +908,42 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
                     5: None, 
                 },
                 "rapid fire": False,
-                "autoreload": False
+                "auto reload": False
             }
         }
     }
+    ammoTable = soup.find_all(class_='col-lg-12')[0].find('tbody').find_all('tr')
+    for row in ammoTable:
+        cols = row.find_all('td')
+        shotName = cols[0].text.split()
+        if shotName[0].lower() in ['flaming','water','freeze','thunder','dragon','slicing','wyvern','demon','armor','tranq']:
+            shotType = obj['ammo'][shotName[0].lower()][1]
+        else:
+            shotType = obj['ammo'][shotName[0].lower()][int(shotName[2])]
+        shotType['capacity'] = cols[1].text
 
+        special = cols[2].text.strip().replace(' -',' ').split()
+        if special[0].lower() == "rapid":
+            shotType['rapid fire'] = True
+        if special[-1].lower() == "reload":
+            shotType['auto reload'] = True
 
+        recoilList = cols[3].text.replace(' ','').replace('\n','').split('x')
+        recoilList.pop(0)
+        for line in range(0,len(recoilList)):
+            recoilList[line] = recoilList[line][1:].lower()
+            shotType['recoil'][line+1] = recoilList[line]
+
+        reloadList = cols[4].text.replace(' ','').replace('\n','').split('x')
+        reloadList.pop(0)
+        for line in range(0,len(reloadList)):
+            reloadList[line] = reloadList[line][1:].lower()
+            shotType['reload'][line+1] = reloadList[line]
+
+#Crafting:
+#is final? - for quick reference
+#craftable - from smithy
+#upgradable - lack of both upgrades and craftable implies rewarded e.g. Kulve Taroth weapons
 
 # Ammo Up: Capacity <= 4: capacity +1,>= 5: capacity + 2
 
@@ -924,35 +962,6 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
 #         craftingTableRow[item][line] = craftingTableRow[item][line].strip()
 #         if craftingTableRow[item][line] == 'Forge Equipment':
 #             craftable = True
-
-# obj["id"] = 0
-
-
-# obj["attributes"] = {}
-# obj["damageType"] = None
-# obj["crafting"] = {
-#     "craftable": craftable,
-#     "previous": None,
-#     "branches": [
-#         2
-#     ],
-#     "final": 0,
-#     # "cost" : int(craftingTableRow[0].split('\n')[1].rstrip('z').replace(',','')),
-#     "craftingMaterials": [
-#         {
-#             "quantity": 1,
-#             "item": {
-#                 "id": 116,
-#                 "rarity": 4,
-#                 "carryLimit": 99,
-#                 "value": 60,
-#                 "name": "Iron Ore",
-#                 "description": "Ore that can be smelted into metal and used for many different purposes."
-#             }
-#         }
-#     ],
-#     "upgradeMaterials": []
-# }
 
 
 # # write to file

@@ -1,36 +1,26 @@
-Scrape:
+
+Obj = {
     id
-    attributes
-    damage type
-    durability
+    attributes 
+    damageType
     crafting
+        final
         craftable
+        upgradable
         previous
         branches
-        craftingMaterials
-        upgradeMaterials
-    assets
-        image
-    ammo
-    coatings
-    attack variables
+        purchasable
+        requirements
+        cost
+        crafting materials
+        upgrade materials
+}
 
-done:
-    type
-    rarity
-    attack
-        display
-        raw
-    affinity
-    defence
-    elderseal
-    assets
-        thumb
+
+Kiranico has some duplicate issues 
+    keep in mind the Kulve Taroth weapons
+    cull these if no ordered method exists
 
 version control on runtime make call to the server and check against local logs
 saving of user data
 graphical interface
-
-dont' forget cost!
-
-content-box p-4
