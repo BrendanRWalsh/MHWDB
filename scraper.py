@@ -1,8 +1,8 @@
 # script for a single weapon page to be downloaded.
-import requests
+import requests, json
 from bs4 import BeautifulSoup
 
-url = "https://mhworld.kiranico.com/weapons/0WIDi7/chrome-assault-i"
+url = "https://mhworld.kiranico.com/weapons/l0FWibL/chrome-cross-i"
 
 
 # pull from page
@@ -12,8 +12,13 @@ soup = BeautifulSoup(page.content, 'html.parser')
 # base object initialization
 obj = {}
 
-# sort elements from:
-# details
+#  _________________________
+# |                        |
+# | Start element scraping |
+# |________________________|
+
+
+# DETAILS:
 details = soup.find_all(class_='col-sm-6')[0].text.strip().split(' - ')
 obj["name"] = soup.find_all(class_='align-self-center')[0].text
 obj["description"] = details[2].strip()
@@ -23,24 +28,24 @@ obj["assets"] = {
     "image": soup.find_all(class_='img-fluid')[0]['src']
 }
 
-# Stats table
+# STAT TABLE:
 statTable = soup.find_all(class_='col-sm-6')[1]
 statTableRows = statTable.find_all('tr')
 col1 = statTableRows[0].find_all('td')
 col2 = statTableRows[1].find_all('td')
 col3 = statTableRows[2].find_all('td')
 
-# 1:1 - Rarity
+# CELL 1:1 - RARITY:
 obj["rarity"] = int(col1[0].text[7])
 
-# 1:2 - Attack Values
+# CELL 1:2 - ATTACK VALUES:
 atkValues = col1[1].text.split(' | ')
 obj["attack"] = {
     "display": atkValues[0],
     "raw": atkValues[1].split('\n')[0]
 }
 
-# 1:3 - Element(s) or bowgun deviation/skill
+# CELL 1:3 - ELEMENTS(S)/ BOWGUN DEVIATION / SPECIAL AMMO
 if obj["type"] == "Light Bowgun":
     obj["deviation"] = col1[2].find_all('div')[0].text.strip()
 elif obj["type"] == "Heavy Bowgun":
@@ -61,20 +66,20 @@ else:
             'damage': int(elements[x+1]),
             'hidden': hidden})
 
-# 2:1 -  Decoration Slots
+# CELL 2:1 - DECORATION SLOTS
 obj['slots'] = []
 slots = col2[0].find_all('img')
 for slot in slots:
     x = slot['src'][-5]
     obj['slots'].append({'rank': int(x)})
 
-# 2:2 - Affinity
+# CELL 2:2 - AFFINITY
 obj['affinity'] = col2[1].text.split()[0].rstrip('%')
 
-# 2:3 - Defense
+# CELL 2:3 - DEFENSE
 obj['defense'] = int(col2[2].text.split()[0][1:-1])
 
-# 3:1 - Durability
+# CELL 3:1 - DURABILITY
 if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
     red = col3[0].find_all(class_='sharpness-red')
     orange = col3[0].find_all(class_='sharpness-orange')
@@ -103,11 +108,11 @@ if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
             "purple": int(float(purple[0]['style'][7:-2])*4),
         }]
 
-# 3:2 - Elderseal
+# CELL 3:2 - ELDERSEAL
 obj['elderseal'] = None if col3[1].find_all(
     'strong')[0].text == "" else col3[1].find_all('strong')[0].text
 
-# 4 - Unique to weapon type: HH notes, Shelling type, Phial, Kinesect bonus, Coatings, Ammo + mods
+# CELL 4 - Unique to weapon type: HH notes, Shelling type, Phial, Kinesect bonus, Coatings, Ammo + mods (absent from other types)
 if obj["type"] == "Hunting Horn":
     col4 = statTableRows[3].find('td').find_all('span')
     notes = {
@@ -940,31 +945,90 @@ if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
             reloadList[line] = reloadList[line][1:].lower()
             shotType['reload'][line+1] = reloadList[line]
 
-#Crafting:
-#is final? - for quick reference
-#craftable - from smithy
-#upgradable - lack of both upgrades and craftable implies rewarded e.g. Kulve Taroth weapons
+# CRAFTING:
+obj['crafting'] = {}
 
-# Ammo Up: Capacity <= 4: capacity +1,>= 5: capacity + 2
+# WEAPON TREE + UPGRADES
+upgradeTable = soup.find_all(class_='col-lg-6')[0].find(class_='table table-sm').find_all('tr')
+for x in range(0,len(upgradeTable)):
+    upgradeTable[x] = upgradeTable[x].text.strip().split('\n')[0].strip()
 
-#  LeftTables = soup.find_all(class_='col-lg-6')[0]
-# rightTables = soup.find_all(class_='col-lg-6')[1]
-# if len(rightTables) == 2:
-#     requirements = True
-# # engage scraping of requirements if so
-# craftingTable = rightTables.find(class_='table table-sm')
-# craftingTableRow = craftingTable.find_all("tr")
-# # determine if craftible
-# craftable = False
-# for item in range(0, len(craftingTableRow)):
-#     craftingTableRow[item] = craftingTableRow[item].text.strip().split('\n')
-#     for line in range(0, len(craftingTableRow[item])):
-#         craftingTableRow[item][line] = craftingTableRow[item][line].strip()
-#         if craftingTableRow[item][line] == 'Forge Equipment':
-#             craftable = True
+# IS FINAL?
+if(upgradeTable[-1] == obj['name']):
+    obj['crafting']['final'] = True
+else:
+    obj['crafting']['final'] = False
+
+# PREVIOUS IN TREE
+weapIndex = upgradeTable.index(obj['name'])
+if weapIndex == 0:
+    obj['crafting']['previous'] = None
+else:
+    obj['crafting']['previous'] = upgradeTable[weapIndex-1]
+
+# NEXT UPGRADE / BRANCHES
+if obj['crafting']['final'] == False:
+    obj['crafting']['branches'] = []
+    for x in range(weapIndex+1,len(upgradeTable)):
+        obj['crafting']['branches'].append(upgradeTable[x])
+
+# FORGING REQUIREMENTS
+requireTable = soup.find_all(class_='col-lg-6')[1].find_all(class_='element-wrapper')[0].text.replace('  ','').replace('\n\n\n','').split('\n')
+requireTable.pop()
+if requireTable[0].lower() == 'requires':
+    obj['crafting']['requirements'] = []
+    for line in range(1,len(requireTable)):
+        req = requireTable[line].split()[0]
+        objective = requireTable[line].split()
+        objective.pop(0)
+        obj['crafting']['requirements'].append({
+            req : " ".join(objective)
+        })
+else:
+    obj['crafting']['requirements'] = None
+
+# CRAFTING MATERIAL TABLE
+craftingTable = soup.find_all(class_='col-lg-6')[1].find_all('tr')
+
+# COST
+obj['crafting']['cost'] = int(craftingTable[0].text.strip().split('\n')[-1].rstrip('z').replace(',',''))
+
+# IS CRAFTABLE / FORGE-ABLE?
+# IS UPGRADABLE?
+# CRAFTING MATERIALS
+# UPGRADE MATERIALS
+obj['crafting']['craftable'] = False
+obj['crafting']['upgradeable'] = False
+for item in range(1,len(craftingTable)):
+    mat=(craftingTable[item].text.replace('  ','').replace('\n\n','%').strip('%').rstrip('\n').split('%'))
+    if mat[0].lower() == 'forge equipment':
+        if not obj['crafting']['craftable']:
+            obj['crafting']['craftable'] = True
+            obj['crafting']['craftingMaterials'] = []
+        obj['crafting']['craftingMaterials'].append(
+            {
+            'quantity' : int(mat[2].strip('x')),
+            'item' : {
+                'name' : mat[1]
+            }
+        })
+    
+    if mat[0].lower() == 'upgrade equipment':
+        if not obj['crafting']['upgradeable']:
+            obj['crafting']['upgradeable'] = True
+            obj['crafting']['upgradeMaterials'] = []
+        obj['crafting']['upgradeMaterials'].append(
+            {
+            'quantity' : int(mat[2].strip('x')),
+            'item' : {
+                'name' : mat[1]
+            }
+        })
 
 
-# # write to file
-# # f = open("content.txt", "a")
-# # f.write(soup.prettify())
-# # f.close()
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(obj, f, ensure_ascii=False, indent=4)
+# write to file
+# f = open("content.txt", "a")
+# f.write(soup.prettify())
+# f.close()
