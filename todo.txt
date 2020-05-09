@@ -1,19 +1,8 @@
 
 Obj = {
-    id
-    attributes 
-    damageType
-    crafting
-        final
-        craftable
-        upgradable
-        previous
-        branches
-        purchasable
-        requirements
-        cost
-        crafting materials
-        upgrade materials
+    id (generate after the fact...)
+    skills 
+    damageType (worth it????)
 }
 
 
@@ -24,3 +13,23 @@ Kiranico has some duplicate issues
 version control on runtime make call to the server and check against local logs
 saving of user data
 graphical interface
+
+
+naming in game vs MHWDB
+Branches to id
+crafting items improve
+
+Added:
+
+HH notes
+ammo
+    mod upgrades
+    rapidfire?
+    autoreload?
+Crafting:
+    Is final?
+    Is upgradable?
+    Zenny cost
+
+
+Missed:
