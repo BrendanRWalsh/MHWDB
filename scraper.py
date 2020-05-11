@@ -1,4 +1,3 @@
-# script for a single weapon page to be downloaded.
 import requests
 import json
 import urllib.request as req
@@ -6,9 +5,10 @@ import copy
 import os
 from bs4 import BeautifulSoup
 
+
 def scraper():
-    
-    def findInDB(name,db):
+
+    def findInDB(name, db):
         if db == 'weapons':
             nList = name.lower().split()
             if nList[-1] in roman:
@@ -34,12 +34,12 @@ def scraper():
         # Check if in MHWDB already
         name = soup.find_all(class_='align-self-center')[0].text
         print('loading weapon: '+name)
-        objMHWBD = findInDB(name,'weapons')
+        objMHWBD = findInDB(name, 'weapons')
         # base object initialization
         if objMHWBD != None:
             obj = objMHWBD.copy()
         else:
-            print('NOT IN DATABASE: '+ name)
+            print('NOT IN DATABASE: ' + name)
             obj = {
                 "id": None,
                 "type": None,
@@ -138,7 +138,6 @@ def scraper():
                 "image": soup.find_all(class_='img-fluid')[0]['src']
             }
 
-
         # STAT TABLE:
         statTable = soup.find_all(class_='col-sm-6')[1]
         statTableRows = statTable.find_all('tr')
@@ -185,7 +184,8 @@ def scraper():
             obj['slots'].append({'rank': int(x)})
 
         # CELL 2:2 - AFFINITY
-        obj['attributes']['affinity'] = int(col2[1].text.split()[0].rstrip('%'))
+        obj['attributes']['affinity'] = int(
+            col2[1].text.split()[0].rstrip('%'))
 
         # CELL 2:3 - DEFENSE
         obj['attributes']['defense'] = int(col2[2].text.split()[0][1:-1])
@@ -1044,7 +1044,8 @@ def scraper():
                 if shotName[0].lower() in ['flaming', 'water', 'freeze', 'thunder', 'dragon', 'slicing', 'wyvern', 'demon', 'armor', 'tranq']:
                     shotType = obj['ammo'][shotName[0].lower()][1]
                 else:
-                    shotType = obj['ammo'][shotName[0].lower()][int(shotName[2])]
+                    shotType = obj['ammo'][shotName[0].lower()
+                                           ][int(shotName[2])]
                 shotType['capacity'] = cols[1].text
 
                 special = cols[2].text.strip().replace(' -', ' ').split()
@@ -1074,7 +1075,8 @@ def scraper():
         upgradeTable = soup.find_all(
             class_='col-lg-6')[0].find(class_='table table-sm').find_all('tr')
         for x in range(0, len(upgradeTable)):
-            upgradeTable[x] = upgradeTable[x].text.strip().split('\n')[0].strip()
+            upgradeTable[x] = upgradeTable[x].text.strip().split('\n')[
+                0].strip()
 
         # IS FINAL?
         if(upgradeTable[-1] == obj['name']):
@@ -1087,7 +1089,7 @@ def scraper():
         if weapIndex == 0:
             obj['crafting']['previous'] = None
         else:
-            prev = findInDB(upgradeTable[weapIndex-1],'weapons')
+            prev = findInDB(upgradeTable[weapIndex-1], 'weapons')
             if prev == None:
                 obj['crafting']['previous'] = upgradeTable[weapIndex-1]
             else:
@@ -1097,7 +1099,7 @@ def scraper():
         if obj['crafting']['final'] == False:
             obj['crafting']['branches'] = []
             for x in range(weapIndex+1, len(upgradeTable)):
-                branch = findInDB(upgradeTable[x],'weapons')
+                branch = findInDB(upgradeTable[x], 'weapons')
                 if branch == None:
                     obj['crafting']['branches'].append(upgradeTable[x])
                 else:
@@ -1131,8 +1133,8 @@ def scraper():
         for item in range(1, len(craftingTable)):
             mat = (craftingTable[item].text.replace('  ', '').replace(
                 '\n\n', '%').strip('%').rstrip('\n').split('%'))
-            matDB = findInDB(mat[1],'items')
-            if matDB == None: 
+            matDB = findInDB(mat[1], 'items')
+            if matDB == None:
                 matDB = mat[1]
             # CRAFTING MATERIALS
             if mat[0].lower() == 'forge equipment':
@@ -1144,8 +1146,8 @@ def scraper():
 
                 obj['crafting']['craftingMaterials'].append(
                     {
-                    'quantity': int(mat[2].strip('x')),
-                    'item': matDB
+                        'quantity': int(mat[2].strip('x')),
+                        'item': matDB
                     })
             # UPGRADE MATERIALS
             if mat[0].lower() == 'upgrade equipment':
@@ -1162,9 +1164,9 @@ def scraper():
                         }
                     })
         return obj
-    
-    #scraper!!
-    
+
+    # scraper!!
+
     # load current databases (replace with however python handles GET)
     with open('json/weaponsMHWDB.json', 'r') as f:
         weaponsMHWDB = json.load(f)
@@ -1175,17 +1177,17 @@ def scraper():
     roman = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix']
 
     urlList = []
-    for i in range(0,14):
+    for i in range(0, 14):
         try:
             page = "webpages/type"+str(i)+".html"
-            print("loading page: "+ page)
+            print("loading page: " + page)
             # Load weapons page
             soup = BeautifulSoup(open(page), 'html.parser')
             table = soup.find(class_="mt-4").find('tbody').find_all('tr')
 
-            # grab urls        
+            # grab urls
             for index in table:
-                urlList.append(index.find('a',href = True)['href'])
+                urlList.append(index.find('a', href=True)['href'])
         except:
             pass
 
@@ -1193,14 +1195,14 @@ def scraper():
     itemsNotInDB = []
     weaponsNotInDB = []
     failedURLs = []
-    for i in range(0,len(urlList)):
+    for i in range(0, len(urlList)):
         try:
             print(str(i / len(urlList) * 100)+"% complete")
             weaponsList.append(scrapeWeapon(urlList[i]))
         except:
             failedURLs.append(urlList[i])
             pass
-        
+
     with open('failed.txt', 'w', encoding='utf-8') as f:
         for line in failedURLs:
             f.write(line + '\n')
@@ -1215,5 +1217,6 @@ def scraper():
 
     with open('json/data.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
-    
+
+
 scraper()
