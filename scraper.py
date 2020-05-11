@@ -1223,7 +1223,7 @@ def scraper():
 
     # iterate over weaps without ids
     for item in weaponsList:
-        if item['id'] = None:
+        if item['id'] == None:
             item['id'] = x
             x = x+1
 
