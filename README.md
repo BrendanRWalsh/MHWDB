@@ -1,12 +1,12 @@
-#Kiranico weapon scraper
+# Kiranico weapon scraper
 Downloads all weapon data from Kiranico and collates it with the existing database.
 saves the updated data as /json/updatedWeapons.json
 
-##Requires:
+## Requires:
     -Beautifulsoup4
     -Requests
 
-##Things this adds to the existing database:
+## Things this adds to the existing database:
     Iceborne weapons
     Crafting:
         Required game completion items e.g. quests, having obtained a specific item
