@@ -1,14 +1,14 @@
 # Kiranico weapon scraper
 Downloads all weapon data from Kiranico and collates it with the existing database.
 
-saves the updated data as /json/updatedWeapons.json
+Saves the updated data as /json/updatedWeapons.json
 
 ## Requires:
 - Beautifulsoup4
 - Requests
 
 ## Things this adds to the existing database:
-Iceborne weapons
+All Iceborne weapons currently on Kiranico
 
 **Crafting:**
 - Required game completion items e.g. quests, having obtained a specific item
@@ -22,8 +22,6 @@ Iceborne weapons
 - Each ammo now has mod levels (recoil/reload)
 - Each ammo now has it's autoreload/rapid fire status
 - Bowgun mod count (dependant on rarity)
-
-
 
 ## known issues:
 
