@@ -1546,3 +1546,212 @@ Kjárr Bow "King"
 Kjárr Bow "Decay"
 Kjárr Bow "Water"
 Kjárr Bow "Blast"
+fatal assault 1
+fatal assault 2
+icicle assault 1
+fatal assault 3
+cartilage blaster 1
+cartilage blaster 2
+cartilage blaster 3
+Iceroar
+Gluttonous Fangcannon+
+Gluttonous Direcannon
+Tigrex Howl
+datura blaster 4
+laguna blaster 1
+laguna blaster 2
+kadachi lion 4
+crimson kadachi lion 1
+crimson kadachi lion 2
+Gnashing Flammenkanone+
+Donnerkanone
+Donnerkanone+
+Fulguration's Roar
+Ruinous Destruction
+deadeye destroyer 1
+deadeye destroyer 2
+Mightning
+Legia Shattercryst+
+Hoarcry Shattercryst
+Franz Glacia
+baan bazooka 1
+baan bazooka 2
+Dios Cannon
+Griffon Blazooka+
+Hornking Blazooka
+Shining Quiver
+gama turret 1
+gama turret 2
+Burning Igna
+Xeno Jiiqa+
+Magda Gemitus Vulcan
+Hydros Laimos
+dragonseal cannon 1
+dragonseal cannon 2
+Solemn Reflection
+Teostra's Firestorm
+water cannon 4
+nightmare cannon 1
+Hidden Gambit
+nightmare cannon 2
+Endless Famine
+Soulfire Roar "Blaze"
+Soulfire Roar "Ruin"
+Soulfire Roar "Styx"
+defender heavy bowgun 1
+defender heavy bowgun 2
+defender heavy bowgun 3
+defender heavy bowgun 4
+defender heavy bowgun 5
+Brimstren Drakemouth
+Stygian Humilitas
+Hidden Gambit+
+Baleful Night
+Sulfurteinn Gyrad
+The Guttering Gasp
+Righteous Varka
+Tigrex Howl+
+Accursed Bellow
+Atom Cannon
+Rajang Blaster
+Rajang Destroyer
+Mightning+
+Loyal Thunder
+icicle assault 2
+Guild Palace Rifle
+Royal Light Cortege
+Demonlord Beastbuster
+Lightbreak Cannon
+Safi's Rapidcannon
+Safi's Burstcannon
+Safi's Snipecannon
+Safi's Scorchcannon
+Safi's Freezecannon
+Kjárr Assault "Rage"
+Kjárr Assault "Horn"
+Kjárr Assault "Spark"
+Kjárr Assault "Magma"
+Kjárr Assault "Water"
+Kjárr Assault "Ice"
+crossblitzer 1
+crossblitzer 2
+crossblitzer 3
+blackwing bowgun 1
+breakshot 1
+breakshot 2
+breakshot 3
+Icehawk
+saber's howl 1
+saber's howl 2
+rex fusillade 1
+jyura bullet 4
+beo shooter 1
+hidden bullet 1
+beo shooter 2
+barroth bazooka 1
+barroth bazooka 2
+brachydios shot 1
+anja buster 4
+fulgurshot 1
+fulgurshot 2
+Ruinous Cataclysm
+lumu typhon 4
+nightmare's seed 1
+Glavenus Blitz
+nightmare's seed 2
+Karma+
+Nether Salvo
+Ghost
+Gulgoleth's Despair
+Gulgoleth's Ruin
+rathbuster 3
+Azure Soulscorcher
+Argent Ray
+Mythical Three-Evils
+Hydra Actinula
+fireshatter 1
+mammoth bowgun 1
+fireshatter 2
+Xeno Neqiina+
+Bazelcore
+dragonseal bowgun 1
+dragonseal bowgun 2
+Fading Blossom
+Daora's Yellowjacket
+lightning blitz 4
+Usurper's Crime
+Usurper's Crime+
+Despot's Wildfire
+frost blitz 3
+Blizzard Cannon
+laguna blitz 1
+Blizzard Cannon+
+Blizzard Volley
+God's Isle
+Diregun "Dementia"
+Soulfire Rasp "Blaze"
+Soulfire Rasp "Ruin"
+Soulfire Rasp "Styx"
+Neo Cross Bowgun
+defender light bowgun 1
+defender light bowgun 2
+defender light bowgun 3
+defender light bowgun 4
+defender light bowgun 5
+Brimstren Drakekiss
+Brimstren Drakevow
+mammoth bowgun 2
+hidden bullet 2
+acid blitz 1
+acid blitz 2
+laguna blitz 2
+Graceful Almaria
+rex fusillade 2
+Accursed Fire
+brachydios shot 2
+Rajang Barrage
+Ten Thousand Volts
+blackwing bowgun 2
+Black Actinula
+Guild Palace Bowgun
+Royal Surefire Shot
+Demonlord Cannon
+Lightbreak Gun
+Safi's Hellshot
+Safi's Frostshot
+Safi's Boltshot
+Safi's Aquashot
+Safi's Drakshot
+Gold Pierce Razer
+Gold Spread Razer
+Gold Shot Razer
+Glutton Gold Razer
+Mire Gold Razer
+Mud Gold Razer
+Rage Gold Razer
+Drifter Gold Razer
+Claw Gold Razer
+Decay Gold Razer
+King Gold Razer
+Erupter Gold Razer
+Bomber Gold Razer
+Taroth Blitz "Glutton"
+Taroth Blitz "Mire"
+Taroth Blitz "Mud"
+Taroth Blitz "Rage"
+Taroth Blitz "Drifter"
+Taroth Blitz "Claw"
+Taroth Blitz "Decay"
+Taroth Blitz "King"
+Taroth Blitz "Erupter"
+Taroth Blitz "Bomber"
+Taroth Blitz "Pierce"
+Taroth Blitz "Spread"
+Taroth Blitz "Shot"
+Taroth Blitz "Support"
+Kjárr Blitz "Bomber"
+Kjárr Blitz "Claw"
+Kjárr Blitz "Decay"
+Kjárr Blitz "King"
+Kjárr Blitz "Thunder"
+Kjárr Blitz "Ice"
