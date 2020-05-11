@@ -1,11 +1,9 @@
-Don't bother trying to use me; i'm not ready.
-
 Downloads all weapon data from Kiranico and collates it with the existing database.
 
 Things this adds to the existing database:
-    Iceborne weapons
 
-expands on the existing weapons:
+
+    Iceborne weapons
     Crafting:
         Required game completion items e.g. quests, having obtained a specific item
         Zenny cost
