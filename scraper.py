@@ -1178,18 +1178,18 @@ def scraper():
 
     urlList = []
     for i in range(0, 14):
-        try:
-            page = "webpages/type"+str(i)+".html"
-            print("loading page: " + page)
-            # Load weapons page
-            soup = BeautifulSoup(open(page), 'html.parser')
-            table = soup.find(class_="mt-4").find('tbody').find_all('tr')
 
-            # grab urls
-            for index in table:
+        page = "webpages/type"+str(i)+".html"
+        print("loading page: " + page)
+        # Load weapons page
+        soup = BeautifulSoup(open(page), 'html.parser')
+        table = soup.find(class_="mt-4").find('tbody').find_all('tr')
+        # grab urls
+        for index in table:
+            try:
                 urlList.append(index.find('a', href=True)['href'])
-        except:
-            pass
+            except:
+                pass
 
     weaponsList = []
     itemsNotInDB = []
