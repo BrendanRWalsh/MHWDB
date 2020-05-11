@@ -1215,6 +1215,20 @@ def scraper():
         for line in itemsNotInDB:
             f.write(line + '\n')
 
+
+    x = 0
+    # Find the highest id number in use
+    for item in weaponsList:
+        if item['id'] != None:
+            if item['id'] > x:
+                x = item['id']
+                
+    # iterate over weaps without ids
+    for item in weaponsList:
+        if item['id'] = None:
+            item['id'] = x
+            x = x+1
+
     with open('json/data.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
 
