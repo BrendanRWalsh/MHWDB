@@ -3,28 +3,11 @@ import requests
 import json
 import urllib.request as req
 import copy
+import os
 from bs4 import BeautifulSoup
 
 def scraper():
-    # load current databases (replace with however python handles GET)
-    with open('json/weaponsMHWDB.json', 'r') as f:
-        weaponsMHWDB = json.load(f)
-    with open('json/itemsMHWDB.json', 'r') as f:
-        itemsMHWDB = json.load(f)
-
-    # for number comprehention
-    roman = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix']
-
-    # Load weapons page
-    page = requests.get('https://mhworld.kiranico.com/weapons')
-    soup = BeautifulSoup(page.content, 'html.parser')
-    table = soup.find(class_="mt-4").find('tbody').find_all('tr')
-    # grab urls
-    urlList = []
-
-    for i in table:
-        urlList.append(i.find('a',href = True)['href'])
-
+    
     def findInDB(name,db):
         if db == 'weapons':
             nList = name.lower().split()
@@ -155,7 +138,7 @@ def scraper():
                 "image": soup.find_all(class_='img-fluid')[0]['src']
             }
 
-        obj['damageType'] =
+
         # STAT TABLE:
         statTable = soup.find_all(class_='col-sm-6')[1]
         statTableRows = statTable.find_all('tr')
@@ -174,9 +157,9 @@ def scraper():
         }
 
         # CELL 1:3 - ELEMENTS(S)/ BOWGUN DEVIATION / SPECIAL AMMO
-        if obj["type"] == "Light Bowgun":
+        if obj["type"] == "light-bowgun":
             obj["deviation"] = col1[2].find_all('div')[0].text.strip()
-        elif obj["type"] == "Heavy Bowgun":
+        elif obj["type"] == "heavy-bowgun":
             obj["specialAmmo"] = col1[2].find_all('div')[0].text
             obj["deviation"] = col1[2].find_all('div')[1].text.strip()
         else:
@@ -208,34 +191,35 @@ def scraper():
         obj['attributes']['defense'] = int(col2[2].text.split()[0][1:-1])
 
         # CELL 3:1 - DURABILITY
-        if objMHWBD == None:
-            if obj["type"] not in ["Heavy Bowgun", "Light Bowgun", "Bow"]:
-                red = col3[0].find_all(class_='sharpness-red')
-                orange = col3[0].find_all(class_='sharpness-orange')
-                yellow = col3[0].find_all(class_='sharpness-yellow')
-                green = col3[0].find_all(class_='sharpness-green')
-                blue = col3[0].find_all(class_='sharpness-blue')
-                white = col3[0].find_all(class_='sharpness-white')
-                purple = col3[0].find_all(class_='sharpness-purple')
-                obj["durability"] = [
-                    {
-                        "red": int(float(red[0]['style'][7:-2])*4),
-                        "orange": int(float(orange[0]['style'][7:-2])*4),
-                        "yellow": int(float(yellow[0]['style'][7:-2])*4),
-                        "green": int(float(green[0]['style'][7:-2])*4),
-                        "blue": int(float(blue[0]['style'][7:-2])*4),
-                        "white": int(float(white[0]['style'][7:-2])*4),
-                        "purple": int(float(purple[0]['style'][7:-2])*4),
-                    },
-                    {
-                        "red": int(float(red[1]['style'][7:-2])*4),
-                        "orange": int(float(orange[0]['style'][7:-2])*4),
-                        "yellow": int(float(yellow[0]['style'][7:-2])*4),
-                        "green": int(float(green[0]['style'][7:-2])*4),
-                        "blue": int(float(blue[0]['style'][7:-2])*4),
-                        "white": int(float(white[0]['style'][7:-2])*4),
-                        "purple": int(float(purple[0]['style'][7:-2])*4),
-                    }]
+        if obj["type"] not in ["heavy-bowgun", "light-bowgun", "bow"]:
+            if objMHWBD == None:
+                if obj["type"] not in ["heavy-bowgun", "light-bowgun", "bow"]:
+                    red = col3[0].find_all(class_='sharpness-red')
+                    orange = col3[0].find_all(class_='sharpness-orange')
+                    yellow = col3[0].find_all(class_='sharpness-yellow')
+                    green = col3[0].find_all(class_='sharpness-green')
+                    blue = col3[0].find_all(class_='sharpness-blue')
+                    white = col3[0].find_all(class_='sharpness-white')
+                    purple = col3[0].find_all(class_='sharpness-purple')
+                    obj["durability"] = [
+                        {
+                            "red": int(float(red[0]['style'][7:-2])*4),
+                            "orange": int(float(orange[0]['style'][7:-2])*4),
+                            "yellow": int(float(yellow[0]['style'][7:-2])*4),
+                            "green": int(float(green[0]['style'][7:-2])*4),
+                            "blue": int(float(blue[0]['style'][7:-2])*4),
+                            "white": int(float(white[0]['style'][7:-2])*4),
+                            "purple": int(float(purple[0]['style'][7:-2])*4),
+                        },
+                        {
+                            "red": int(float(red[1]['style'][7:-2])*4),
+                            "orange": int(float(orange[0]['style'][7:-2])*4),
+                            "yellow": int(float(yellow[0]['style'][7:-2])*4),
+                            "green": int(float(green[0]['style'][7:-2])*4),
+                            "blue": int(float(blue[0]['style'][7:-2])*4),
+                            "white": int(float(white[0]['style'][7:-2])*4),
+                            "purple": int(float(purple[0]['style'][7:-2])*4),
+                        }]
 
         # CELL 3:2 - ELDERSEAL
         obj['elderseal'] = None if col3[1].find_all(
@@ -325,7 +309,7 @@ def scraper():
                 obj['coatings'].append('sleep')
             if "blast" not in coats:
                 obj['coatings'].append('blast')
-        if obj["type"] in ["Heavy Bowgun", "Light Bowgun"]:
+        if obj["type"] in ["heavy-bowgun", "light-bowgun"]:
             obj["mods"] = 1 if obj['rarity'] < 3 else 2 if obj['rarity'] < 5 else 3 if obj['rarity'] < 9 else 4 if obj['rarity'] < 10 else 5
             obj["ammo"] = {
                 "normal": {
@@ -1181,16 +1165,55 @@ def scraper():
     
     #scraper!!
     
+    # load current databases (replace with however python handles GET)
+    with open('json/weaponsMHWDB.json', 'r') as f:
+        weaponsMHWDB = json.load(f)
+    with open('json/itemsMHWDB.json', 'r') as f:
+        itemsMHWDB = json.load(f)
+
+    # for number comprehention
+    roman = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix']
+
+    urlList = []
+    for i in range(0,14):
+        try:
+            page = "webpages/type"+str(i)+".html"
+            print("loading page: "+ page)
+            # Load weapons page
+            soup = BeautifulSoup(open(page), 'html.parser')
+            table = soup.find(class_="mt-4").find('tbody').find_all('tr')
+
+            # grab urls        
+            for index in table:
+                urlList.append(index.find('a',href = True)['href'])
+        except:
+            pass
+
     weaponsList = []
     itemsNotInDB = []
     weaponsNotInDB = []
-    for i in range(0,20):
-        weaponsList.append(scrapeWeapon(urlList[i]))
+    failedURLs = []
+    for i in range(0,len(urlList)):
+        try:
+            print(str(i / len(urlList) * 100)+"% complete")
+            weaponsList.append(scrapeWeapon(urlList[i]))
+        except:
+            failedURLs.append(urlList[i])
+            pass
+        
+    with open('failed.txt', 'w', encoding='utf-8') as f:
+        for line in failedURLs:
+            f.write(line + '\n')
+
+    with open('newWeaps.txt', 'w', encoding='utf-8') as f:
+        for line in weaponsNotInDB:
+            f.write(line + '\n')
+
+    with open('newItems.txt', 'w', encoding='utf-8') as f:
+        for line in itemsNotInDB:
+            f.write(line + '\n')
 
     with open('json/data.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
-    print(itemsNotInDB)
-    print(weaponsNotInDB)
-foo = None
-bar = None
+    
 scraper()
