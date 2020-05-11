@@ -1,8 +1,6 @@
 import requests
 import json
-import urllib.request as req
 import copy
-import os
 from bs4 import BeautifulSoup
 
 
@@ -1231,6 +1229,5 @@ def scraper():
 
     with open('json/updatedWeapons.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
-
 
 scraper()
