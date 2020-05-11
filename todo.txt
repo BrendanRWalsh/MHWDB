@@ -9,27 +9,3 @@ Obj = {
 Kiranico has some duplicate issues 
     keep in mind the Kulve Taroth weapons
     cull these if no ordered method exists
-
-version control on runtime make call to the server and check against local logs
-saving of user data
-graphical interface
-
-
-naming in game vs MHWDB
-Branches to id
-crafting items improve
-
-Added:
-
-HH notes
-ammo
-    mod upgrades
-    rapidfire?
-    autoreload?
-Crafting:
-    Is final?
-    Is upgradable?
-    Zenny cost
-
-
-Missed:
