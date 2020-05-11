@@ -1222,14 +1222,14 @@ def scraper():
         if item['id'] != None:
             if item['id'] > x:
                 x = item['id']
-                
+
     # iterate over weaps without ids
     for item in weaponsList:
         if item['id'] = None:
             item['id'] = x
             x = x+1
 
-    with open('json/data.json', 'w', encoding='utf-8') as f:
+    with open('json/updatedWeapons.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
 
 
