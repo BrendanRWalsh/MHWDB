@@ -25,27 +25,19 @@ All Iceborne weapons currently on Kiranico
 
 
 ## Files included:
-README.md - This file.
+- README.md - This file.
+- scraper.py - Main script.
+- requirements.txt - Required libraries.
 
-scraper.py - Main script.
+**/json**
+- itemsMHWDB.json - Existing Database of items.
+- weaponsMHWDB.json - Existing Database of weapons.
 
-requirements.txt - Required libraries.
-
-
-**json**
-itemsMHWDB.json - Existing Database of items.
-
-weaponsMHWDB.json - Existing Database of weapons.
-
-
-**Output**a
-updatedWeapons.json - Output of all scraped data + existing database
-
-failed.txt - any failed requests will be dumped here
-
-newItems.txt - Any items found that did not previousely exist in database
-
-newWeaps.txt - Any weapons found that did not previously exist in database
+**/Output**
+- updatedWeapons.json - Output of all scraped data + existing database
+- failed.txt - any failed requests will be dumped here
+- newItems.txt - Any items found that did not previousely exist in database
+- newWeaps.txt - Any weapons found that did not previously exist in database
 
 ## known issues:
 
