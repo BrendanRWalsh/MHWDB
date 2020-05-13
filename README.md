@@ -23,16 +23,29 @@ All Iceborne weapons currently on Kiranico
 - Each ammo now has it's autoreload/rapid fire status
 - Bowgun mod count (dependant on rarity)
 
+
+## Files included:
+README.md - This file.
+scraper.py - Main script.
+requirements.txt - Required libraries.
+
+**json**
+itemsMHWDB.json - Existing Database of items.
+weaponsMHWDB.json - Existing Database of weapons.
+
+**Output**
+updatedWeapons.json - Output of all scraped data + existing database
+failed.txt - any failed requests will be dumped here
+newItems.txt - Any items found that did not previousely exist in database
+newWeaps.txt - Any weapons found that did not previously exist in database
+
 ## known issues:
 
 #### Requires each pages of weapon URLs to be saved locally: 
-
-Kiranico uses an ajax that I'm unfamiliar with, saving the html was a faster, if clunky fix
+Kiranico uses an ajax that I'm unfamiliar with, saving the main html's of each weapon type was a faster, if clunky fix
 
 #### Some weapons/id's are duplicates!
-
 This is an issue mainly with Kulve Taroth weapons that share a name
 
 #### New weapons lack image files
-
-Will hopefully add this to the script later
+Will hopefully add this to the script later...

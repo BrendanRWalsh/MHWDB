@@ -3,6 +3,9 @@ import json
 import copy
 from bs4 import BeautifulSoup
 
+# Scrapes weapon data from mhworld.kiranico.com/weapons and combines the scraped data with the existing database (currently a local copy)
+# Does not need any additionl input, will scrape everything and output "updatedWeapons.json"
+# Effort was made to mimic the existing databases data structure.
 
 def scraper():
 
@@ -1165,18 +1168,19 @@ def scraper():
 
     # scraper!!
 
-    # load current databases (replace with however python handles GET)
+    # load current databases (replace with however python handles GET later)
     with open('json/weaponsMHWDB.json', 'r') as f:
         weaponsMHWDB = json.load(f)
+
     with open('json/itemsMHWDB.json', 'r') as f:
         itemsMHWDB = json.load(f)
 
-    # for number comprehention
+    # for number comprehention later
     roman = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix']
 
     urlList = []
+    #14 weapon types, 14 pages
     for i in range(0, 14):
-
         page = "webpages/type"+str(i)+".html"
         print("loading page: " + page)
         # Load weapons page
@@ -1201,15 +1205,15 @@ def scraper():
             failedURLs.append(urlList[i])
             pass
 
-    with open('failed.txt', 'w', encoding='utf-8') as f:
+    with open('Output/failedURLS.txt', 'w', encoding='utf-8') as f:
         for line in failedURLs:
             f.write(line + '\n')
 
-    with open('newWeaps.txt', 'w', encoding='utf-8') as f:
+    with open('Output/newWeaps.txt', 'w', encoding='utf-8') as f:
         for line in weaponsNotInDB:
             f.write(line + '\n')
 
-    with open('newItems.txt', 'w', encoding='utf-8') as f:
+    with open('Output/newItems.txt', 'w', encoding='utf-8') as f:
         for line in itemsNotInDB:
             f.write(line + '\n')
 
@@ -1227,7 +1231,7 @@ def scraper():
             item['id'] = x
             x = x+1
 
-    with open('json/updatedWeapons.json', 'w', encoding='utf-8') as f:
+    with open('Output/updatedWeapons.json', 'w', encoding='utf-8') as f:
         json.dump(weaponsList, f, ensure_ascii=False, indent=4)
 
 scraper()
